@@ -48,7 +48,6 @@ class ViewController: UIViewController {
                 print(error )
             }
         }
-        
         task.resume()
     }
 }
