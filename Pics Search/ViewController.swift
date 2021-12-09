@@ -65,7 +65,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
             fetchPhotos(query: text)
         }
     }
-    
+//    функция для получения данных по URL
     func fetchPhotos (query: String) {
 //        текст из поисковой строки вставляется в URL
         let urlString = "https://api.unsplash.com/search/photos?page=1&per_page=30&query=\(query)&client_id=0jNpDtsjteqxueEK3azU6s9ePCu9ioo5M4LUPcRt0Vw"
@@ -81,6 +81,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
 //                "нанизываем" данные полученные с сервера на нашу модель
                 let jsonResult = try JSONDecoder().decode(APIResponse.self, from: data)
                 DispatchQueue.main.async {
+//                    обновляем значение results из структуры APIResponse
                     self?.results = jsonResult.results
                     self?.collectionView?.reloadData()
                 }
@@ -93,11 +94,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
         task.resume()
     }
     
-//    отображение collectionView с фотографиями
+//    отображение collectionView с фотографиями (должно отображать кол-во результатов запроса)
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return results.count
     }
-    
+//    загружаем image из URL
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let imageURLString = results[indexPath.row].urls.regular
         guard let cell = collectionView.dequeueReusableCell(

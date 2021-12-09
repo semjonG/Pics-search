@@ -40,7 +40,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     }
 //    функция принимает URL
     func configure(with urlString: String) {
-//        подтверждение, что объект - URL
+//        создаем объект URL из типа String
         guard let url = URL(string: urlString) else {
             return
         }
