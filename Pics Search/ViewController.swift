@@ -3,7 +3,7 @@
 //  Pics Search
 //
 //  Created by mac on 06.12.2021.
-//
+
 
 import UIKit
 
@@ -28,6 +28,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
     
     var results: [Result] = []
     
+// добавляем поисковую строку
     let searchBar = UISearchBar()
     
     override func viewDidLoad() {
@@ -46,7 +47,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
         collectionView.backgroundColor = .systemBackground
         self.collectionView = collectionView
     }
-    
+//    размеры поисковой строки и collectionView
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         searchBar.frame = CGRect(x: 10, y: view.safeAreaInsets.top, width: view.frame.size.width-20, height: 50)
@@ -54,24 +55,30 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        убираем клавиатуру
         searchBar.resignFirstResponder()
+//        достаем текст из поисковой строки
         if let text = searchBar.text {
             results = []
             collectionView?.reloadData()
+//            вставляем текст в функцию
             fetchPhotos(query: text)
         }
     }
     
     func fetchPhotos (query: String) {
+//        текст из поисковой строки вставляется в URL
         let urlString = "https://api.unsplash.com/search/photos?page=1&per_page=30&query=\(query)&client_id=0jNpDtsjteqxueEK3azU6s9ePCu9ioo5M4LUPcRt0Vw"
         guard let url = URL(string: urlString) else {
             return
         }
+//        делаем вызов API
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
             guard let data = data, error == nil else {
                 return
             }
             do {
+//                "нанизываем" данные полученные с сервера на нашу модель
                 let jsonResult = try JSONDecoder().decode(APIResponse.self, from: data)
                 DispatchQueue.main.async {
                     self?.results = jsonResult.results
@@ -82,9 +89,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UISearchBarD
                 print(error)
             }
         }
+//        запуск
         task.resume()
     }
     
+//    отображение collectionView с фотографиями
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return results.count
     }
